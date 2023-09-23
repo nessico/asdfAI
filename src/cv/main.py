@@ -20,7 +20,7 @@ catImages = np.array(catImages)
 catLabels = np.array(catLabels)
 
 model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(128, 128, 3)),
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(512, 512, 3)),
     layers.MaxPooling2D((2, 2)),
     layers.Conv2D(64, (3, 3), activation='relu'),
     layers.MaxPooling2D((2, 2)),
@@ -36,7 +36,7 @@ model.fit(catImages, catLabels, epochs=10, batch_size=32, validation_split=0.2)
 
 # Load a new image
 new_img = cv.imread('C:\\Users\\danhp\\PycharmProjects\\asimovAI\\trainingdata\\animalfaces\\train\\cat\\flickr_cat_000002.jpg')
-new_img = cv.resize(new_img, (128, 128))
+new_img = cv.resize(new_img, (512, 512))
 new_img = new_img / 255.0  # Normalize
 
 # Predict

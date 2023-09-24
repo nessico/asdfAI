@@ -1,12 +1,19 @@
 import cv2 as cv
-import matplotlib.pyplot as plt
 import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
+# Check if GPU is available
+physical_devices = tf.config.list_physical_devices('GPU')
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    print("Using GPU!")
+else:
+    print("Using CPU :(")
+
 path = "C:\\Users\\danhp\\PycharmProjects\\asimovAI\\trainingdata\\animalfaces\\train\\cat\\"
-catImages =[]
+catImages = []
 catLabels = []
 
 for filename in os.listdir(path):
@@ -26,13 +33,16 @@ model = models.Sequential([
     layers.MaxPooling2D((2, 2)),
     layers.Flatten(),
     layers.Dense(64, activation='relu'),
-    layers.Dense(2, activation='softmax')  # 2 because we're assuming it's a binary classification (cats vs not-cats)
+    layers.Dense(2, activation='softmax')  # 2 because it's a binary classification (cats vs not-cats)
 ])
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 model.fit(catImages, catLabels, epochs=10, batch_size=32, validation_split=0.2)
 
+# Save in TensorFlow SavedModel format
+model.save('saved_model/my_model')
+# Load for later loaded_model = tf.keras.models.load_model('saved_model/my_model')
 
 # Load a new image
 new_img = cv.imread('C:\\Users\\danhp\\PycharmProjects\\asimovAI\\trainingdata\\animalfaces\\train\\cat\\flickr_cat_000002.jpg')
@@ -46,6 +56,7 @@ if np.argmax(prediction) == 1:
     print("It's a cat!")
 else:
     print("It's not a cat!")
+
 
 
 # -----------------------------
